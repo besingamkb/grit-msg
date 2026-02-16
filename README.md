@@ -14,9 +14,20 @@
 - A Groq API key: https://console.groq.com/keys
 
 ## Install (No Rust Required)
-1. Go to GitHub Releases for this repo.
-2. Download the archive matching your OS/CPU.
-3. Extract and place `grit-msg` (`grit-msg.exe` on Windows) in your `PATH`.
+macOS / Linux:
+```bash
+curl -fsSL https://raw.githubusercontent.com/besingamkb/grit-msg/main/install.sh | bash
+```
+
+Windows (PowerShell):
+```powershell
+irm https://raw.githubusercontent.com/besingamkb/grit-msg/main/install.ps1 | iex
+```
+
+Optional version pin:
+```bash
+VERSION=v0.1.1 curl -fsSL https://raw.githubusercontent.com/besingamkb/grit-msg/main/install.sh | bash
+```
 
 Release archives are published automatically when a tag like `v0.1.0` is pushed.
 
