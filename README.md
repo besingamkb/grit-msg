@@ -13,6 +13,13 @@
 - `git`
 - A Groq API key: https://console.groq.com/keys
 
+## Install (No Rust Required)
+1. Go to GitHub Releases for this repo.
+2. Download the archive matching your OS/CPU.
+3. Extract and place `grit-msg` (`grit-msg.exe` on Windows) in your `PATH`.
+
+Release archives are published automatically when a tag like `v0.1.0` is pushed.
+
 ## Build
 ```bash
 cargo build --release --locked
@@ -44,4 +51,10 @@ Notes:
 cargo fmt --all
 cargo check
 cargo test
+```
+
+## Maintainer Release
+```bash
+git tag v0.1.0
+git push origin v0.1.0
 ```
