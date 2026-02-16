@@ -64,4 +64,13 @@ tar -xzf "${TMP_DIR}/${ARCHIVE}" -C "$TMP_DIR"
 install -m 0755 "${TMP_DIR}/${BINARY_NAME}" "${BIN_DIR}/${BINARY_NAME}"
 
 echo "Installed ${BINARY_NAME} to ${BIN_DIR}/${BINARY_NAME}"
+if [[ ":$PATH:" != *":$BIN_DIR:"* ]]; then
+  echo ""
+  echo "Your PATH does not include ${BIN_DIR}."
+  echo "Add it with:"
+  echo "  export PATH=\"${BIN_DIR}:\$PATH\""
+  echo ""
+  echo "To persist for future shells (zsh example):"
+  echo "  echo 'export PATH=\"${BIN_DIR}:\$PATH\"' >> ~/.zshrc && source ~/.zshrc"
+fi
 echo "Run: ${BINARY_NAME} --help"

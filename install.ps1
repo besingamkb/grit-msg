@@ -39,6 +39,16 @@ try {
     Copy-Item (Join-Path $TempDir "$BinaryName.exe") (Join-Path $BinDir "$BinaryName.exe") -Force
 
     Write-Host "Installed $BinaryName to $(Join-Path $BinDir "$BinaryName.exe")"
+    $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+    if (-not $userPath) { $userPath = "" }
+    if (-not ($userPath.Split(';') -contains $BinDir)) {
+        Write-Host ""
+        Write-Host "Your user PATH does not include $BinDir."
+        Write-Host "Add it for future terminals with:"
+        Write-Host "  setx PATH `"$($userPath.TrimEnd(';'));$BinDir`""
+        Write-Host ""
+        Write-Host "Then restart PowerShell."
+    }
     Write-Host "Run: $BinaryName --help"
 } finally {
     Remove-Item -Path $TempDir -Recurse -Force -ErrorAction SilentlyContinue

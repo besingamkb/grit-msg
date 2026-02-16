@@ -29,6 +29,20 @@ Optional version pin:
 VERSION=v0.1.1 curl -fsSL https://raw.githubusercontent.com/besingamkb/grit-msg/main/install.sh | bash
 ```
 
+If `grit-msg` is not found after install, add the bin directory to `PATH`:
+
+macOS / Linux:
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+Windows (PowerShell, then restart terminal):
+```powershell
+setx PATH "$([Environment]::GetEnvironmentVariable('Path','User'));$HOME\.local\bin"
+```
+
 Release archives are published automatically when a tag like `v0.1.0` is pushed.
 
 ## Build
