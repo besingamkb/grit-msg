@@ -78,17 +78,16 @@ fn shorten_header(header: &str, max: usize) -> String {
         }
     }
 
-    if let Some((prefix, subject)) = header.split_once(": ") {
-        if let Some(scope_start) = prefix.find('(') {
-            if prefix.ends_with(')') {
-                let commit_type = &prefix[..scope_start];
-                let compact_prefix = format!("{commit_type}: ");
-                if compact_prefix.chars().count() < max {
-                    let remaining = max - compact_prefix.chars().count();
-                    let trimmed_subject = truncate_words(subject, remaining);
-                    return format!("{compact_prefix}{trimmed_subject}");
-                }
-            }
+    if let Some((prefix, subject)) = header.split_once(": ")
+        && let Some(scope_start) = prefix.find('(')
+        && prefix.ends_with(')')
+    {
+        let commit_type = &prefix[..scope_start];
+        let compact_prefix = format!("{commit_type}: ");
+        if compact_prefix.chars().count() < max {
+            let remaining = max - compact_prefix.chars().count();
+            let trimmed_subject = truncate_words(subject, remaining);
+            return format!("{compact_prefix}{trimmed_subject}");
         }
     }
 

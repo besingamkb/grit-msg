@@ -46,19 +46,19 @@ pub fn load_or_prompt_groq_key() -> Result<String> {
 
 pub fn clear_stored_groq_keys() -> Result<()> {
     let entry = Entry::new(SERVICE, ACCOUNT).context("failed to initialize keyring entry")?;
-    let _ = delete_keyring_entry(&entry);
+    delete_keyring_entry(&entry);
     let legacy_service_entry = Entry::new(LEGACY_SERVICE, ACCOUNT)
         .context("failed to initialize legacy-service keyring entry")?;
-    let _ = delete_keyring_entry(&legacy_service_entry);
+    delete_keyring_entry(&legacy_service_entry);
 
     let username = env::var("USER").unwrap_or_else(|_| "default".to_owned());
     let legacy_account = format!("{ACCOUNT}:{username}");
     let legacy_entry = Entry::new(SERVICE, &legacy_account)
         .context("failed to initialize legacy keyring entry")?;
-    let _ = delete_keyring_entry(&legacy_entry);
+    delete_keyring_entry(&legacy_entry);
     let legacy_service_legacy_account_entry = Entry::new(LEGACY_SERVICE, &legacy_account)
         .context("failed to initialize legacy-service legacy keyring entry")?;
-    let _ = delete_keyring_entry(&legacy_service_legacy_account_entry);
+    delete_keyring_entry(&legacy_service_legacy_account_entry);
 
     let path = fallback_key_path()?;
     if path.exists() {
@@ -176,7 +176,7 @@ fn load_key_from_path(path: &PathBuf) -> Result<Option<String>> {
         return Ok(None);
     }
 
-    let raw = fs::read_to_string(&path)
+    let raw = fs::read_to_string(path)
         .with_context(|| format!("failed reading fallback key file at {}", path.display()))?;
     let key = raw.trim();
     if key.is_empty() {
