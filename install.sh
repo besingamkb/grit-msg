@@ -28,14 +28,18 @@ case "$ARCH" in
 esac
 
 TARGET="${target_arch}-${platform}"
-ARCHIVE="${BINARY_NAME}-${VERSION}-${TARGET}.tar.gz"
-CHECKSUM="${ARCHIVE}.sha256"
 
 if [[ "$VERSION" == "latest" ]]; then
-  BASE_URL="https://github.com/${REPO}/releases/latest/download"
-else
-  BASE_URL="https://github.com/${REPO}/releases/download/${VERSION}"
+  VERSION="$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" | sed -n 's/.*"tag_name":[[:space:]]*"\([^"]*\)".*/\1/p' | head -n1)"
+  if [[ -z "$VERSION" ]]; then
+    echo "Failed to resolve latest release version for ${REPO}."
+    exit 1
+  fi
 fi
+
+BASE_URL="https://github.com/${REPO}/releases/download/${VERSION}"
+ARCHIVE="${BINARY_NAME}-${VERSION}-${TARGET}.tar.gz"
+CHECKSUM="${ARCHIVE}.sha256"
 
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT

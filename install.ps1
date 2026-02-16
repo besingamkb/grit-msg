@@ -10,14 +10,18 @@ if ([Environment]::Is64BitOperatingSystem -eq $false) {
 }
 
 $Target = "x86_64-pc-windows-msvc"
-$Archive = "$BinaryName-$Version-$Target.zip"
-$Checksum = "$Archive.sha256"
 
 if ($Version -eq "latest") {
-    $BaseUrl = "https://github.com/$Repo/releases/latest/download"
-} else {
-    $BaseUrl = "https://github.com/$Repo/releases/download/$Version"
+    $Latest = Invoke-RestMethod -Uri "https://api.github.com/repos/$Repo/releases/latest"
+    if (-not $Latest.tag_name) {
+        throw "Failed to resolve latest release version for $Repo."
+    }
+    $Version = $Latest.tag_name
 }
+
+$BaseUrl = "https://github.com/$Repo/releases/download/$Version"
+$Archive = "$BinaryName-$Version-$Target.zip"
+$Checksum = "$Archive.sha256"
 
 $TempDir = Join-Path ([System.IO.Path]::GetTempPath()) ("grit-msg-install-" + [System.Guid]::NewGuid())
 New-Item -ItemType Directory -Path $TempDir | Out-Null
