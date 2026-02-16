@@ -1,6 +1,8 @@
 use anyhow::{Context, Result, bail};
 use std::process::Command;
 
+pub const WATERMARK_LINE: &str = "by grit-msg https://github.com/besingamkb/grit-msg";
+
 pub const SYSTEM_PROMPT: &str = r#"You are an expert Git commit assistant.
 
 Output rules:
@@ -39,6 +41,19 @@ pub fn run_git_commit(message: &str) -> Result<()> {
 
 pub fn shell_escape_single_quoted(input: &str) -> String {
     format!("'{}'", input.replace('\'', r#"'"'"'"#))
+}
+
+pub fn with_optional_watermark(message: &str, enabled: bool) -> String {
+    if !enabled {
+        return message.to_owned();
+    }
+
+    let trimmed = message.trim_end();
+    if trimmed.is_empty() {
+        return WATERMARK_LINE.to_owned();
+    }
+
+    format!("{trimmed}\n\n{WATERMARK_LINE}")
 }
 
 pub fn normalize_commit_message(raw: &str) -> String {

@@ -1,4 +1,6 @@
-use grit_msg::commit::{normalize_commit_message, shell_escape_single_quoted};
+use grit_msg::commit::{
+    WATERMARK_LINE, normalize_commit_message, shell_escape_single_quoted, with_optional_watermark,
+};
 
 #[test]
 fn keeps_header_word_boundary() {
@@ -41,4 +43,19 @@ fn escapes_single_quotes_for_shell_command() {
     let msg = "fix: don't break user's setup";
     let escaped = shell_escape_single_quoted(msg);
     assert_eq!(escaped, "'fix: don'\"'\"'t break user'\"'\"'s setup'");
+}
+
+#[test]
+fn does_not_append_watermark_when_disabled() {
+    let msg = "fix(cli): tighten validation";
+    let out = with_optional_watermark(msg, false);
+    assert_eq!(out, msg);
+}
+
+#[test]
+fn appends_watermark_on_new_line_when_enabled() {
+    let msg = "fix(cli): tighten validation\n\nKeep parser strict.";
+    let out = with_optional_watermark(msg, true);
+    assert!(out.ends_with(WATERMARK_LINE));
+    assert!(out.contains("\n\nby grit-msg "));
 }

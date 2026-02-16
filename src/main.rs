@@ -18,6 +18,8 @@ struct Args {
     diff_token_budget: usize,
     #[arg(long)]
     clear_aiapi_keys: bool,
+    #[arg(long)]
+    with_watermark: bool,
 }
 
 #[tokio::main]
@@ -45,7 +47,10 @@ async fn main() -> Result<()> {
 
     ui::print_generated_message(&message);
     match ui::prompt_commit_action()? {
-        ui::Action::Yes => commit::run_git_commit(&message)?,
+        ui::Action::Yes => {
+            let final_message = commit::with_optional_watermark(&message, args.with_watermark);
+            commit::run_git_commit(&final_message)?
+        }
         ui::Action::No => {}
         ui::Action::Copy => ui::copy_and_print_manual_command(&message)?,
     }

@@ -64,12 +64,14 @@ Options:
 ```bash
 grit-msg --model llama-3.3-70b-versatile --diff-token-budget 6000
 grit-msg --clear-aiapi-keys
+grit-msg --with-watermark
 ```
 
 Notes:
 - If no staged changes exist, the tool exits with an error.
 - `--clear-aiapi-keys` removes stored keys from keyring + fallback files.
 - `GROQ_API_KEY` environment variable is supported and takes precedence.
+- `--with-watermark` appends a final watermark line only when committing with `y/yes` (not shown in preview/copy output).
 
 ## Development
 ```bash
